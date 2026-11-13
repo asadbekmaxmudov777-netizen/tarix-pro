@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TARIX PRO | Test Platformasi</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#0b1220;color:#f1f5f9;min-height:100vh}
+header{background:#111c30;padding:22px 6%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #26344b}
+.logo{font-size:23px;font-weight:900;color:#60a5fa}
+.logo span{color:white}
+header small{color:#94a3b8}
+.container{max-width:1200px;margin:auto;padding:30px 20px}
+nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:25px}
+button{border:0;border-radius:9px;padding:12px 17px;background:#2563eb;color:white;cursor:pointer;font-weight:bold}
+button:hover{background:#1d4ed8}
+nav button{background:#1e293b}
+nav button.active{background:#2563eb}
+.panel{background:#142137;border:1px solid #293950;border-radius:15px;padding:22px;margin-bottom:20px}
+h2{font-size:21px;margin-bottom:18px}
+h3{margin-bottom:12px}
+.muted{color:#94a3b8;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:20px}
+.stat{background:#172943;padding:22px;border-radius:13px;border:1px solid #293950}
+.stat strong{font-size:29px;color:#60a5fa;display:block;margin-top:10px}
+input,select{width:100%;padding:13px;background:#0b1729;border:1px solid #33445f;color:white;border-radius:8px;margin:7px 0 14px}
+label{font-size:13px;color:#cbd5e1}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+table{width:100%;border-collapse:collapse;min-width:550px}
+th,td{padding:14px;text-align:left;border-bottom:1px solid #293950;font-size:14px}
+th{color:#60a5fa}
+.table-wrap{overflow-x:auto}
+.hidden{display:none!important}
+.result{background:#102f38;padding:17px;border-radius:10px;margin-top:15px;color:#6ee7b7}
+.login{font-size:20px;color:#60a5fa;font-weight:bold;padding:12px;background:#0b1729;border-radius:8px;margin:10px 0}
+.question{padding:16px;background:#1c2b42;border-radius:10px;margin:14px 0}
+.option{display:block;padding:12px;margin-top:8px;background:#263750;border-radius:8px;cursor:pointer}
+.option:hover{background:#304766}
+.option input{width:auto;margin:0 8px 0 0}
+.danger{background:#dc2626}
+footer{text-align:center;padding:25px;color:#64748b}
+@media(max-width:600px){header{padding:18px;display:block}.container{padding:18px 12px}.panel{padding:16px}}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">TARIX <span>PRO</span></div>
+ <small>Professional tarix test platformasi</small>
+</header>
+
+<div class="container">
+<nav>
+ <button class="active" onclick="showPage('home',this)">Bosh sahifa</button>
+ <button onclick="showPage('students',this)">O‘quvchilar</button>
+ <button onclick="showPage('topics',this)">Mavzular</button>
+ <button onclick="showPage('test',this)">Testga kirish</button>
+ <button onclick="showPage('results',this)">Natijalar</button>
+</nav>
+
+<!-- BOSH SAHIFA -->
+<section id="home">
+ <h2>Assalomu alaykum! 👋</h2>
+ <p class="muted" style="margin-bottom:20px">Tarix fanidan bilimlarni nazorat qilish markazi</p>
+ <div class="stats">
+  <div class="stat">Jami o‘quvchilar<strong id="totalStudents">0</strong></div>
+  <div class="stat">Jami sinflar<strong id="totalClasses">0</strong></div>
+  <div class="stat">Testlar soni<strong id="totalTests">0</strong></div>
+  <div class="stat">Umumiy o‘rtacha ball<strong id="overall">0</strong></div>
+ </div>
+ <div class="panel">
+  <h2>Platforma imkoniyatlari</h2>
+  <p class="muted">O‘quvchilarni boshqarish, tarix mavzularini tanlash, test topshirish va natijalarni kuzatish.</p>
+ </div>
+</section>
+
+<!-- O'QUVCHILAR -->
+<section id="students" class="hidden">
+ <div class="panel">
+  <h2>Yangi o‘quvchi qo‘shish</h2>
+  <div class="grid">
+   <div><label>Ismi</label><input id="first" placeholder="Masalan: Ali"></div>
+   <div><label>Familiyasi</label><input id="last" placeholder="Masalan: Valiyev"></div>
+   <div><label>Sinfi</label><input id="className" placeholder="Masalan: 7-A"></div>
+  </div>
+  <button onclick="addStudent()">+ O‘quvchi qo‘shish</button>
+ </div>
+ <div class="panel">
+  <h2>O‘quvchilar ro‘yxati</h2>
+  <div class="table-wrap">
+   <table>
+    <thead><tr><th>№</th><th>Ism-familiya</th><th>Sinf</th><th>Login</th><th>O‘rtacha ball</th><th></th></tr></thead>
+    <tbody id="studentTable"></tbody>
+   </table>
+  </div>
+ </div>
+</section>
+
+<!-- MAVZULAR -->
+<section id="topics" class="hidden">
+ <div class="panel">
+  <h2>Tarix mavzularini boshqarish</h2>
+  <label>Yangi mavzu nomi</label>
+  <input id="newTopic" placeholder="Masalan: Amir Temur davlati">
+  <button onclick="addTopic()">Mavzu qo‘shish</button>
+ </div>
+ <div class="panel">
+  <h2>Mavzular jadvali</h2>
+  <div class="table-wrap">
+   <table><thead><tr><th>№</th><th>Mavzu nomi</th><th>Holati</th><th></th></tr></thead>
+   <tbody id="topicTable"></tbody></table>
+  </div>
+ </div>
+</section>
+
+<!-- TESTGA KIRISH -->
+<section id="test" class="hidden">
+ <div class="panel" id="entry">
+  <h2>Testga kirish</h2>
+  <p class="muted">Avval sinfingizni, keyin ism-familiyangizni tanlang.</p>
+  <label>Sinfni tanlang</label>
+  <select id="chooseClass" onchange="loadNames()"><option value="">Sinfni tanlang</option></select>
+  <label>Ism va familiyangiz</label>
+  <select id="chooseStudent" onchange="showLogin()"><option value="">Avval sinfni tanlang</option></select>
+  <div id="loginArea" class="hidden">
+   <p class="muted">Sizning shaxsiy loginingiz:</p>
+   <div class="login" id="loginValue"></div>
+   <p class="muted">Bu demo versiyada login avtomatik yaratiladi. Haqiqiy tizimda login maxfiy tekshiruv bilan himoyalanishi kerak.</p>
+  </div>
+  <label>Test mavzusini tanlang</label>
+  <select id="chooseTopic"></select>
+  <button onclick="startTest()">TESTNI BOSHLASH →</button>
+ </div>
+ <div class="panel hidden" id="quiz">
+  <h2 id="quizTitle">Tarix testi</h2>
+  <div id="questions"></div>
+  <button onclick="finishTest()">Testni yakunlash</button>
+ </div>
+ <div id="testResult"></div>
+</section>
+
+<!-- NATIJALAR -->
+<section id="results" class="hidden">
+ <div class="panel">
+  <h2>Sinflar statistikasi</h2>
+  <div class="table-wrap">
+   <table><thead><tr><th>Sinf</th><th>O‘quvchilar soni</th><th>O‘rtacha ball</th></tr></thead>
+   <tbody id="classTable"></tbody></table>
+  </div>
+ </div>
+ <div class="panel">
+  <h2>Har bir o‘quvchining natijasi</h2>
+  <div class="table-wrap">
+   <table><thead><tr><th>Ism-familiya</th><th>Sinf</th><th>Testlar</th><th>O‘rtacha ball</th></tr></thead>
+   <tbody id="resultTable"></tbody></table>
+  </div>
+ </div>
+</section>
+</div>
+<footer>© 2026 TARIX PRO | Tarix fanidan bilimlar platformasi</footer>
+
+<script>
+const defaultQuestions=[
+ {topic:"Qadimgi dunyo tarixi",q:"Qadimgi Misrda hukmdor qanday atalgan?",a:["Podsho","Fir’avn","Imperator","Xon"],correct:1},
+ {topic:"Qadimgi dunyo tarixi",q:"Mesopotamiya qaysi daryolar oralig‘ida joylashgan?",a:["Nil va Kongo","Amudaryo va Sirdaryo","Dajla va Furot","Hind va Gang"],correct:2},
+ {topic:"O‘zbekiston tarixi",q:"Amir Temur qaysi yilda tug‘ilgan?",a:["1336-yil","1405-yil","1220-yil","1370-yil"],correct:0},
+ {topic:"O‘zbekiston tarixi",q:"Amir Temur davlatining poytaxti qaysi shahar bo‘lgan?",a:["Buxoro","Xiva","Samarqand","Toshkent"],correct:2},
+ {topic:"Jahon tarixi",q:"Ikkinchi jahon urushi qaysi yilda boshlangan?",a:["1914-yil","1939-yil","1941-yil","1945-yil"],correct:1},
+ {topic:"Jahon tarixi",q:"Buyuk Fransuz inqilobi qaysi yilda boshlangan?",a:["1789-yil","1812-yil","1776-yil","1804-yil"],correct:0}
+];
+
+let students=JSON.parse(localStorage.getItem("tp_students")||"[]");
+let topics=JSON.parse(localStorage.getItem("tp_topics")||"null")||[
+ "Qadimgi dunyo tarixi","O‘zbekiston tarixi","Jahon tarixi",
+ "Amir Temur davri","O‘rta asrlar tarixi"
+];
+let tests=JSON.parse(localStorage.getItem("tp_tests")||"[]");
+let activeStudent=null, currentQuestions=[],currentTopic="";
+
+function save(){
+ localStorage.setItem("tp_students",JSON.stringify(students));
+ localStorage.setItem("tp_topics",JSON.stringify(topics));
+ localStorage.setItem("tp_tests",JSON.stringify(tests));
+}
+
+function showPage(id,btn){
+ document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
+ render();
+}
+
+function addStudent(){
+ let first=document.getElementById("first").value.trim();
+ let last=document.getElementById("last").value.trim();
+ let cls=document.getElementById("className").value.trim();
+ if(!first||!last||!cls)return alert("Barcha maydonlarni to‘ldiring!");
+ let login=(first+"."+last).toLowerCase().replace(/\s/g,"").replace(/[^a-z0-9.]/g,"")+
+ Math.floor(100+Math.random()*900);
+ students.push({id:Date.now(),first,last,cls,login,scores:[]});
+ save();render();
+ document.getElementById("first").value="";
+ document.getElementById("last").value="";
+ document.getElementById("className").value="";
+}
+
+function addTopic(){
+ let t=document.getElementById("newTopic").value.trim();
+ if(!t)return;
+ if(topics.includes(t))return alert("Bu mavzu mavjud!");
+ topics.push(t);save();render();
+ document.getElementById("newTopic").value="";
+}
+
+function average(arr){
+ return arr.length?(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):"0";
+}
+
+function render(){
+ document.getElementById("totalStudents").textContent=students.length;
+ document.getElementById("totalClasses").textContent=new Set(students.map(s=>s.cls)).size;
+ document.getElementById("totalTests").textContent=tests.length;
+ document.getElementById("overall").textContent=average(students.flatMap(s=>s.scores))+"%";
+
+ document.getElementById("studentTable").innerHTML=students.map((s,i)=>`
+ <tr><td>${i+1}</td><td>${s.first} ${s.last}</td><td>${s.cls}</td>
+ <td>${s.login}</td><td>${average(s.scores)}%</td>
+ <td><button class="danger" onclick="deleteStudent(${s.id})">O‘chirish</button></td></tr>`).join("");
+
+ document.getElementById("topicTable").innerHTML=topics.map((t,i)=>`
+ <tr><td>${i+1}</td><td>${t}</td><td>Faol</td>
+ <td><button class="danger" onclick="deleteTopic(${i})">O‘chirish</button></td></tr>`).join("");
+
+ let classes=[...new Set(students.map(s=>s.cls))];
+ document.getElementById("classTable").innerHTML=classes.map(c=>{
+ let group=students.filter(s=>s.cls===c);
+ return `<tr><td>${c}</td><td>${group.length}</td>
+ <td>${average(group.flatMap(s=>s.scores))}%</td></tr>`;
+ }).join("");
+
+ document.getElementById("resultTable").innerHTML=students.map(s=>`
+ <tr><td>${s.first} ${s.last}</td><td>${s.cls}</td>
+ <td>${s.scores.length}</td><td>${average(s.scores)}%</td></tr>`).join("");
+
+ let oldClass=document.getElementById("chooseClass").value;
+ document.getElementById("chooseClass").innerHTML='<option value="">Sinfni tanlang</option>'+
+ classes.map(c=>`<option ${c===oldClass?"selected":""}>${c}</option>`).join("");
+
+ document.getElementById("chooseTopic").innerHTML=topics.map(t=>
+ `<option>${t}</option>`).join("");
+}
+
+function deleteStudent(id){
+ if(confirm("O‘quvchini o‘chirmoqchimisiz?")){
+ students=students.filter(s=>s.id!==id);save();render();
+ }
+}
+function deleteTopic(i){
+ if(confirm("Mavzuni o‘chirmoqchimisiz?")){
+ topics.splice(i,1);save();render();
+ }
+}
+
+function loadNames(){
+ let c=document.getElementById("chooseClass").value;
+ let list=students.filter(s=>s.cls===c);
+ document.getElementById("chooseStudent").innerHTML=
+ '<option value="">O‘quvchini tanlang</option>'+
+ list.map(s=>`<option value="${s.id}">${s.first} ${s.last}</option>`).join("");
+ document.getElementById("loginArea").classList.add("hidden");
+}
+
+function showLogin(){
+ let id=Number(document.getElementById("chooseStudent").value);
+ activeStudent=students.find(s=>s.id===id);
+ let area=document.getElementById("loginArea");
+ if(activeStudent){
+  document.getElementById("loginValue").textContent=activeStudent.login;
+  area.classList.remove("hidden");
+ }else area.classList.add("hidden");
+}
+
+function startTest(){
+ if(!activeStudent || !students.some(s=>s.id===activeStudent.id)){
+  return alert("Avval ism-familiyangizni tanlang!");
+ }
+ currentTopic=document.getElementById("chooseTopic").value;
+ currentQuestions=defaultQuestions.filter(q=>q.topic===currentTopic);
+ if(!currentQuestions.length)currentQuestions=defaultQuestions;
+ document.getElementById("quizTitle").textContent=currentTopic+" testi";
+ document.getElementById("questions").innerHTML=currentQuestions.map((q,i)=>`
+ <div class="question"><b>${i+1}. ${q.q}</b>
+ ${q.a.map((a,j)=>`<label class="option">
+ <input type="radio" name="q${i}" value="${j}">${a}
+ </label>`).join("")}</div>`).join("");
+ document.getElementById("entry").classList.add("hidden");
+ document.getElementById("quiz").classList.remove("hidden");
+ document.getElementById("testResult").innerHTML="";
+}
+
+function finishTest(){
+ let correct=0;
+ currentQuestions.forEach((q,i)=>{
+ let answer=document.querySelector(`input[name="q${i}"]:checked`);
+ if(answer && Number(answer.value)===q.correct)correct++;
+ });
+ let score=Math.round(correct/currentQuestions.length*100);
+ activeStudent.scores.push(score);
+ tests.push({student:activeStudent.id,topic:currentTopic,score,date:new Date().toLocaleDateString("uz-UZ")});
+ save();
+ document.getElementById("quiz").classList.add("hidden");
+ document.getElementById("entry").classList.remove("hidden");
+ document.getElementById("testResult").innerHTML=`
+ <div class="result"><h2>Test yakunlandi!</h2>
+ <h3>${activeStudent.first} ${activeStudent.last}</h3>
+ <p>To‘g‘ri javoblar: ${correct}/${currentQuestions.length}</p>
+ <h2>Natija: ${score}%</h2>
+ <button onclick="document.getElementById('testResult').innerHTML=''">Yopish</button>
+ </div>`;
+ render();
+}
+
+render();
+</script>
+</body>
+</html>
